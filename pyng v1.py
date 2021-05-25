@@ -14,7 +14,7 @@ screen.fill(black)
 pygame.display.flip()
 key_input = pygame.key.get_pressed()
 clock = pygame.time.Clock()
-ball = pygame.draw.rect(screen, white, ((275,275),(40,40)))
+ball = pygame.draw.rect(screen, white, ((275,random.randint(50,550)),(40,40)))
 leftp = pygame.draw.rect(screen, white, ((5,220),(15,60)))
 rightp = pygame.draw.rect(screen, white, ((580,220),(15,60)))
 leftp_up=False
@@ -36,24 +36,30 @@ def movepaddle(paddle,downorup):
     newpaddle = paddle
     newy = paddle.y+(increment*downorup)
     pygame.draw.rect(screen, black, ((paddle.x,paddle.y),(paddle.width,paddle.height)))
-    pygame.display.update()
-    if newy > 540:
+    if newy > 540 or newy < 1:
         newpaddle = paddle
     else:
         newpaddle = pygame.draw.rect(screen, white, ((paddle.x,newy),(paddle.width,paddle.height)))
     return newpaddle
 
 def COMmove(ball,paddle):
-    increment=12.5+(random.randint(1,50))
+    increment=5
     newpaddle = paddle
     pygame.draw.rect(screen, black, ((paddle.x,paddle.y),(paddle.width,paddle.height)))
 
     newy=paddle.y
 
-    if ball.y < paddle.y:
-        newy +=(increment*-1)
-    elif ball.y > paddle.y:
-        newy +=(increment)
+    if random.randint(1,6) != 1:
+        
+        if ball.y < paddle.y:
+            newy +=(increment*-1)
+        elif ball.y > paddle.y:
+            newy +=(increment)
+            
+        if newy > 540 or newy < 1:
+            newpaddle = paddle
+        else:
+            newpaddle = pygame.draw.rect(screen, white, ((paddle.x,newy),(paddle.width,paddle.height)))
           
     newpaddle = pygame.draw.rect(screen, white, ((paddle.x,newy),(paddle.width,paddle.height)))
 
@@ -64,18 +70,18 @@ def ball_move(ball,leftp,rightp,direction,ydirection):
     increment=5
     yincrement=5
     
-    if (ball.y in range(leftp.y-40,leftp.y + leftp.height+20) and ball.x == leftp.x or ball.x > leftp.x and ball.x < (leftp.x+5)) or (ball.y in range(rightp.y-40,rightp.y + rightp.height+20) and ball.x == (rightp.x-20)):
+    if (ball.y in range(leftp.y-30,leftp.y + leftp.height+10) and ball.x == leftp.x or ball.x > leftp.x and ball.x < (leftp.x+5)) or (ball.y in range(rightp.y-30,rightp.y + rightp.height+10) and ball.x == (rightp.x-20)):
         direction*=-1
     newx=(ball.x)+(increment*direction)
 
-    if ball.y in range(leftp.y-40,leftp.y + int((0.5*leftp.height))) and ball.x == leftp.x:
+    if ball.y in range(leftp.y-30,leftp.y + int((0.5*leftp.height))) and ball.x == leftp.x:
         ydirection=-1
-    elif ball.y in range(int(1.5*(leftp.y-40)),leftp.y+leftp.height) and ball.x == leftp.x:
+    elif ball.y in range(int(1.5*(leftp.y-20)),leftp.y+leftp.height) and ball.x == leftp.x:
         ydirection=1
 
-    if ball.y in range(rightp.y-40,rightp.y + int((0.5*rightp.height))) and ball.x == rightp.x:
+    if ball.y in range(rightp.y-30,rightp.y + int((0.5*rightp.height))) and ball.x == rightp.x:
         ydirection=-1
-    elif ball.y in range(int(1.5*(rightp.y-40)),rightp.y+rightp.height) and ball.x == rightp.x:
+    elif ball.y in range(int(1.5*(rightp.y-20)),rightp.y+rightp.height) and ball.x == rightp.x:
         ydirection=1
 
     if ball.y > 560 or ball.y < 1:
@@ -84,14 +90,13 @@ def ball_move(ball,leftp,rightp,direction,ydirection):
     newy=ball.y+((yincrement)*ydirection)
 
     pygame.draw.rect(screen, black, ((ball.x,ball.y),(ball.width,ball.height)))
-    pygame.display.update()
     newball = pygame.draw.rect(screen, white, ((newx,newy),(ball.width,ball.height)))
     return newball, direction, ydirection
 
 def gameover():
     time.sleep(0.5)
     screen.fill(black)
-    ball = pygame.draw.rect(screen, white, ((275,275),(40,40)))
+    ball = pygame.draw.rect(screen, white, ((275,random.randint(50,550)),(40,40)))
     leftp = pygame.draw.rect(screen, white, ((5,220),(15,60)))
     rightp = pygame.draw.rect(screen, white, ((580,220),(15,60)))
     leftp_up=False
@@ -101,10 +106,6 @@ def gameover():
     time.sleep(0.5)
 
     return ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection
-
-
-    
-    
 
 pygame.display.update()
 
