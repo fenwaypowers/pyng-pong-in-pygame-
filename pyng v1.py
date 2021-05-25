@@ -127,13 +127,13 @@ def title_screen():
     text_surface, rect = GAME_FONT.render("by Fenway Powers", white)
     screen.blit(text_surface, (210, 135))
     
-    text_surface, rect = GAME_FONT.render("Player V.S. COM", white)
+    text_surface, rect = GAME_FONT.render("1 Player", white)
     screen.blit(text_surface, (230, 300))
     
     text_surface, rect = GAME_FONT.render("2 Player", white)
     screen.blit(text_surface, (230, 330))
     
-    text_surface, rect = GAME_FONT.render("Training Mode", white)
+    text_surface, rect = GAME_FONT.render("Exit Game", white)
     screen.blit(text_surface, (230, 360))
     
     arrow = pygame.draw.rect(screen, white, ((150,300),(20,20)))
@@ -148,6 +148,7 @@ pygame.display.update()
 PVCOM=False
 PVP = False
 GameOn = False
+Train = False
 
 while True:
     clock.tick(60)
@@ -263,7 +264,6 @@ while True:
             screen.fill(black)
             arrow = title_screen()
             pygame.display.update()
-        
     else:
         #Title Screen / Menu
         for event in pygame.event.get():
@@ -289,6 +289,8 @@ while True:
                         screen.fill(black)
                         ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
                         time.sleep(0.5)
+                    if arrow.y == 360:
+                        pygame.quit()
 
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
