@@ -128,13 +128,13 @@ def title_screen():
     screen.blit(text_surface, (210, 135))
     
     text_surface, rect = GAME_FONT.render("1 Player", white)
-    screen.blit(text_surface, (230, 300))
+    screen.blit(text_surface, (250, 300))
     
     text_surface, rect = GAME_FONT.render("2 Player", white)
-    screen.blit(text_surface, (230, 330))
+    screen.blit(text_surface, (250, 330))
     
     text_surface, rect = GAME_FONT.render("Exit Game", white)
-    screen.blit(text_surface, (230, 360))
+    screen.blit(text_surface, (250, 360))
     
     arrow = pygame.draw.rect(screen, white, ((150,300),(20,20)))
     return arrow
