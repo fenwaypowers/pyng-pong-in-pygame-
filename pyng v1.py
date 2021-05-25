@@ -85,7 +85,7 @@ def ball_move(ball,leftp,rightp,direction,ydirection):
     elif ball.y in range(int(1.5*(rightp.y-20)),rightp.y+rightp.height) and ball.x == rightp.x:
         ydirection=1
 
-    if ball.y > 580 or ball.y < 1:
+    if ball.y > 580 or ball.y < 6:
         ydirection*=-1
 
     newy=ball.y+((yincrement)*ydirection)
@@ -97,19 +97,20 @@ def ball_move(ball,leftp,rightp,direction,ydirection):
 def gameover(ball):
     time.sleep(0.5)
     screen.fill(black)
-    ball = pygame.draw.rect(screen, white, ((275,random.randint(50,530)),(ball_height,ball_height)))
+    ball = pygame.draw.rect(screen, white, ((275,random.randint(100,400)),(ball_height,ball_height)))
     leftp = pygame.draw.rect(screen, white, ((5,220),(15,60)))
     rightp = pygame.draw.rect(screen, white, ((580,220),(15,60)))
+    text_surface, rect = GAME_FONT.render(str(left_score), white)
+    screen.blit(text_surface, (40, 50))
+    text_surface, rect = GAME_FONT.render(str(right_score), white)
+    screen.blit(text_surface, (530, 50))
     leftp_up=False
     leftp_down=False
-    direction=1
+    direction=random.choice([1,-1])
     ydirection=1
+    pygame.display.update()
     time.sleep(0.5)
     return ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection
-
-def arrow_move(arrow):
-    a=0
-    
 
 def title_screen():
     screen.fill(black)
@@ -145,12 +146,127 @@ arrow = title_screen()
 pygame.display.update()
 
 PVCOM=False
+PVP = False
+GameOn = False
 
 while True:
-
     clock.tick(60)
 
-    for event in pygame.event.get():
+    if PVCOM:
+        #singleplayer
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_DOWN:
+                    rightp_down=True
+                        
+                if event.key == pygame.K_UP:
+                    rightp_up=True
+
+                if event.key == pygame.K_ESCAPE:
+                    PVCOM = False
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_DOWN:
+                    rightp_down=False
+                if event.key == pygame.K_UP:
+                    rightp_up=False
+
+        if rightp_down == True:
+            rightp = movepaddle(rightp,1)
+        if rightp_up == True:
+            rightp = movepaddle(rightp,-1)
+            
+        ball, direction, ydirection=ball_move(ball,leftp,rightp,direction,ydirection)
+
+        if ball.x < leftp.x:
+            right_score+=1
+            ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
+        if ball.x > rightp.x:
+            left_score+=1
+            ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
+
+        leftp = COMmove(ball,leftp)
+
+        text_surface, rect = GAME_FONT.render(str(left_score), white)
+        screen.blit(text_surface, (40, 50))
+        text_surface, rect = GAME_FONT.render(str(right_score), white)
+        screen.blit(text_surface, (530, 50))
+
+        pygame.draw.rect(screen, white, ((rightp.x,rightp.y),(rightp.width,rightp.height)))
+        pygame.draw.rect(screen, white, ((leftp.x,leftp.y),(leftp.width,leftp.height)))
+
+        if PVCOM == False:
+            left_score = 0
+            right_score = 0
+            screen.fill(black)
+            arrow = title_screen()
+            pygame.display.update()
+            
+    elif PVP:
+        #2 Player
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_DOWN:
+                    rightp_down=True
+                        
+                if event.key == pygame.K_UP:
+                    rightp_up=True
+                    
+                if event.key == pygame.K_s:
+                    leftp_down=True
+                        
+                if event.key == pygame.K_w:
+                    leftp_up=True
+
+                if event.key == pygame.K_ESCAPE:
+                    PVP = False
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_DOWN:
+                    rightp_down=False
+                if event.key == pygame.K_UP:
+                    rightp_up=False
+                if event.key == pygame.K_s:
+                    leftp_down=False
+                if event.key == pygame.K_w:
+                    leftp_up=False
+
+        if rightp_down == True:
+            rightp = movepaddle(rightp,1)
+        if rightp_up == True:
+            rightp = movepaddle(rightp,-1)
+        if leftp_down == True:
+            leftp = movepaddle(leftp,1)
+        if leftp_up == True:
+            leftp = movepaddle(leftp,-1)
+
+        ball, direction, ydirection=ball_move(ball,leftp,rightp,direction,ydirection)
+
+        if ball.x < leftp.x:
+            right_score+=1
+            ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
+        if ball.x > rightp.x:
+            left_score+=1
+            ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
+
+        text_surface, rect = GAME_FONT.render(str(left_score), white)
+        screen.blit(text_surface, (40, 50))
+        text_surface, rect = GAME_FONT.render(str(right_score), white)
+        screen.blit(text_surface, (530, 50))
+
+        pygame.draw.rect(screen, white, ((rightp.x,rightp.y),(rightp.width,rightp.height)))
+        pygame.draw.rect(screen, white, ((leftp.x,leftp.y),(leftp.width,leftp.height)))
+
+        if PVP == False:
+            left_score = 0
+            right_score = 0
+            screen.fill(black)
+            arrow = title_screen()
+            pygame.display.update()
+        
+    else:
+        #Title Screen / Menu
+        for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_DOWN:
                     if arrow.y != 360:
@@ -166,57 +282,15 @@ while True:
                     if arrow.y == 300:
                         PVCOM = True
                         screen.fill(black)
+                        ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
+                        time.sleep(0.5)
+                    if arrow.y == 330:
+                        PVP = True
+                        screen.fill(black)
+                        ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
                         time.sleep(0.5)
 
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
-
-    pygame.display.update()        
-
-    while PVCOM:
-
-        clock.tick(60)
-
-        if True:
-        
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_DOWN:
-                        rightp_down=True
-                        
-                    if event.key == pygame.K_UP:
-                        rightp_up=True
-
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-
-                if event.type == pygame.KEYUP:
-                    rightp_up=False
-                    rightp_down=False
-
-            if rightp_down == True:
-                rightp = movepaddle(rightp,1)
-            if rightp_up == True:
-                rightp = movepaddle(rightp,-1)
-
-            ball, direction, ydirection=ball_move(ball,leftp,rightp,direction,ydirection)
-
-            if ball.x < leftp.x:
-                right_score+=1
-                ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
-            if ball.x > rightp.x:
-                left_score+=1
-                ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
-
-            leftp = COMmove(ball,leftp)
-
-            text_surface, rect = GAME_FONT.render(str(left_score), white)
-            screen.blit(text_surface, (40, 50))
-            text_surface, rect = GAME_FONT.render(str(right_score), white)
-            screen.blit(text_surface, (530, 50))
-
-
-            pygame.draw.rect(screen, white, ((rightp.x,rightp.y),(rightp.width,rightp.height)))
-            pygame.draw.rect(screen, white, ((leftp.x,leftp.y),(leftp.width,leftp.height)))
             
-        pygame.display.update()
+    pygame.display.update()
