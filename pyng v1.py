@@ -21,7 +21,6 @@ leftp_up=False
 leftp_down=False
 direction=1
 ydirection=random.choice([1,-1])
-
 left_score=0
 right_score=0
 
@@ -104,7 +103,6 @@ def gameover():
     direction=1
     ydirection=1
     time.sleep(0.5)
-
     return ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection
 
 pygame.display.update()
