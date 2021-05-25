@@ -32,7 +32,7 @@ text_surface, rect = GAME_FONT.render(str(right_score), white)
 screen.blit(text_surface, (530, 50))
 
 def movepaddle(paddle,downorup):
-    increment=12.5
+    increment=7
     newpaddle = paddle
     newy = paddle.y+(increment*downorup)
     pygame.draw.rect(screen, black, ((paddle.x,paddle.y),(paddle.width,paddle.height)))
