@@ -44,6 +44,14 @@ def movepaddle(paddle,downorup):
         newpaddle = pygame.draw.rect(screen, white, ((paddle.x,newy),(paddle.width,paddle.height)))
     return newpaddle
 
+def mousemove(paddle,newy):
+    pygame.draw.rect(screen, black, ((paddle.x,paddle.y),(paddle.width,paddle.height)))
+    if newy > 540 or newy < 1:
+        newpaddle = paddle
+    else:
+        newpaddle = pygame.draw.rect(screen, white, ((paddle.x,newy),(paddle.width,paddle.height)))
+    return newpaddle
+
 def COMmove(ball,paddle):
     increment=5
     newpaddle = paddle
@@ -133,8 +141,11 @@ def title_screen():
     text_surface, rect = GAME_FONT.render("2 Player", white)
     screen.blit(text_surface, (250, 330))
     
-    text_surface, rect = GAME_FONT.render("Exit Game", white)
+    text_surface, rect = GAME_FONT.render("1 Player (Mouse Control)", white)
     screen.blit(text_surface, (250, 360))
+
+    text_surface, rect = GAME_FONT.render("Exit Game", white)
+    screen.blit(text_surface, (250, 390))
     
     arrow = pygame.draw.rect(screen, white, ((150,300),(20,20)))
     return arrow
@@ -147,8 +158,7 @@ pygame.display.update()
 
 PVCOM=False
 PVP = False
-GameOn = False
-Train = False
+P1MOUSE = False
 
 while True:
     clock.tick(60)
@@ -264,12 +274,47 @@ while True:
             screen.fill(black)
             arrow = title_screen()
             pygame.display.update()
+    elif P1MOUSE:
+        #singleplayer with mouse input instead of keyboard
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    P1MOUSE = False
+
+        mousex, mousey = pygame.mouse.get_pos()
+            
+        ball, direction, ydirection=ball_move(ball,leftp,rightp,direction,ydirection)
+
+        if ball.x < leftp.x:
+            right_score+=1
+            ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
+        if ball.x > rightp.x:
+            left_score+=1
+            ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
+
+        rightp = mousemove(rightp,mousey)
+        leftp = COMmove(ball,leftp)
+
+        text_surface, rect = GAME_FONT.render(str(left_score), white)
+        screen.blit(text_surface, (40, 50))
+        text_surface, rect = GAME_FONT.render(str(right_score), white)
+        screen.blit(text_surface, (530, 50))
+
+        pygame.draw.rect(screen, white, ((rightp.x,rightp.y),(rightp.width,rightp.height)))
+        pygame.draw.rect(screen, white, ((leftp.x,leftp.y),(leftp.width,leftp.height)))
+
+        if P1MOUSE == False:
+            left_score = 0
+            right_score = 0
+            screen.fill(black)
+            arrow = title_screen()
+            pygame.display.update()
     else:
         #Title Screen / Menu
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_DOWN:
-                    if arrow.y != 360:
+                    if arrow.y != 390:
                         arrow=pygame.draw.rect(screen, black, ((150,arrow.y),(20,20)))
                         arrow=pygame.draw.rect(screen, white, ((150,arrow.y+30),(20,20)))
 
@@ -290,9 +335,14 @@ while True:
                         ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
                         time.sleep(0.5)
                     if arrow.y == 360:
+                        P1MOUSE = True
+                        screen.fill(black)
+                        ball, leftp, rightp, leftp_up, leftp_down, direction, ydirection = gameover(ball)
+                        time.sleep(0.5)
+                    if arrow.y == 390:
                         pygame.quit()
 
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
-            
+                    
     pygame.display.update()
