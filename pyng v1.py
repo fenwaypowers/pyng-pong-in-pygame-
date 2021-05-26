@@ -1,4 +1,4 @@
-import pygame, random, time
+import pygame, random, time, sys
 import pygame.freetype
 
 pygame.init()
@@ -341,8 +341,11 @@ while True:
                         time.sleep(0.5)
                     if arrow.y == 390:
                         pygame.quit()
+                        sys.exit()
 
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
+                    sys.exit()
+                    
                     
     pygame.display.update()
