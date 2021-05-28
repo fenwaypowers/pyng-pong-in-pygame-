@@ -59,7 +59,7 @@ def COMmove(ball,paddle):
 
     newy=paddle.y
 
-    if random.randint(1,6) != 1:
+    if random.randint(1,7) != 1:
         
         if ball.y < paddle.y:
             newy +=(increment*-1)
