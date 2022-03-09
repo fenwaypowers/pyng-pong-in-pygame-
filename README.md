@@ -8,3 +8,12 @@ The game has three modes:
 - Singleplayer with keyboard
 - Singleplayer with mouse
 - Two-player
+
+Dependencies:
+Python 3, Pygame
+
+pip install pygame
+https://python.org
+
+Run Instructions:
+python3 
