@@ -1,8 +1,8 @@
 # pyng-pong-in-pygame-
 
-by Fenway Powers, in Foundations of Programming with Joe Raciti
+by Fenway Powers
 
-A simple game of Pong made in Pygame. Final project for class mentioned above.
+A simple game of Pong made in Pygame.
 
 The game has three modes:
 - Singleplayer with keyboard
@@ -12,8 +12,9 @@ The game has three modes:
 Dependencies:
 Python 3, Pygame
 
-pip install pygame
 https://python.org
+```pip install pygame```
+
 
 Run Instructions:
-python3 'pyng v1.py'
+```python3 'pyng v1.py'```
