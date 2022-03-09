@@ -16,4 +16,4 @@ pip install pygame
 https://python.org
 
 Run Instructions:
-python3 
+python3 'pyng v1.py'
